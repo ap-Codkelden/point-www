@@ -133,29 +133,15 @@ def post_pin(id):
     post = posts.show_post(id)
     try:
         if post.pinned:
-            raise PostAlreadyPinnedError
-    except PostAlreadyPinnedError:
+            post.set_pinned(False)
+        else:
+            post.set_pinned()
+        return {"post_id": id, "pinned": post.pinned}
+    except:
         return {
-            "code": "405",
-            "message": "Post already pinned."
-        }
-    else:
-        post.set_pinned()
-
-
-@write_api
-def post_unpin(id):
-    post = posts.show_post(id)
-    try:
-        if not post.pinned:
-            raise PostNotPinnedError
-    except PostNotPinnedError:
-        return {
-            "code": "405",
-            "message": "Post not pinned."
-        }
-    else:
-        post.set_pinned(False)
+            "post_id": id,
+            "error": "pinned error"
+            }
 
 
 @api

@@ -37,7 +37,6 @@ urls = (
     (r'^%s/post/(?P<id>[a-z]+)/s$' % prefix, 'DELETE', blog.unsubscribe),
 
     (r'^%s/post/(?P<id>[a-z]+)/pin$' % prefix, 'POST', blog.post_pin),
-    (r'^%s/post/(?P<id>[a-z]+)/unpin$' % prefix, 'DELETE', blog.post_unpin),
 
     (r'^%s/comments/?$' % prefix, blog.comments),
 
