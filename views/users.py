@@ -263,17 +263,14 @@ def tag_del_from_blacklist():
     return Response(redirect=env.request.referer)
 
 def subscriptions():
-    print '>> env.owner: ', env.owner
-    print '>> env.user: ', env.user
-    print '>> env.owner.get_profile: ', env.owner.get_profile('deny_anonymous')
-    # if not env.owner or not env.owner.id:
     if not env.user.login and env.owner.get_profile('deny_anonymous'):
         raise NotFound
     users = env.owner.subscriptions()
     return render('/subs.html', section='subscriptions', users=users)
 
 def subscribers():
-    if not env.owner or not env.owner.id:
+    if not env.user.login and env.owner.get_profile('deny_anonymous'):
+    # if not env.owner or not env.owner.id:
         raise NotFound
     users = env.owner.subscribers()
     return render('/subs.html', section='subscribers', users=users)
