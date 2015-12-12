@@ -270,7 +270,6 @@ def subscriptions():
 
 def subscribers():
     if not env.user.login and env.owner.get_profile('deny_anonymous'):
-    # if not env.owner or not env.owner.id:
         raise NotFound
     users = env.owner.subscribers()
     return render('/subs.html', section='subscribers', users=users)
