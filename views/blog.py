@@ -584,6 +584,11 @@ def recommend(id):
     comment_id = env.request.args('comment_id')
     text = env.request.args('text')
     try:
+        print '>'*20
+        print id
+        print comment_id
+        print text
+        print '>'*20
         rcid = posts.recommend(id, comment_id, text)
     except RecommendationError:
         raise Forbidden
