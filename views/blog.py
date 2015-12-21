@@ -21,6 +21,7 @@ from datetime import datetime
 from random import randint
 import os
 from unidecode import unidecode
+from collections import namedtuple
 
 from views.filters import markdown_filter
 
@@ -321,9 +322,29 @@ def taglist():
 
     sort_by_name = env.request.args('order', '') != 'cnt'
 
-    tags = env.owner.tags(all=True, sort_by_name=sort_by_name)
+    tag_dict = {}
+    tagtuple = namedtuple('tag','tag, cnt')
+     
+    for t in env.owner.tags(all=True, sort_by_name=sort_by_name):
+        if not t[0].lower() in tag_dict:
+            tag_dict[t[0].lower()] = [[t[0],], t[1]]
+        else:
+            tag_dict[t[0].lower()][0].append(t[0])
+            tag_dict[t[0].lower()][1]+=t[1]
+     
+    for k,v in tag_dict.iteritems():
+        tag_dict[k][0]=sorted(v[0])[0] if len(v[0])!=1 else v[0][0]
+    
+    if sort_by_name:
+        sort_func = lambda x: x[0]
+    else:
+        sort_func = lambda x: x[1]
 
+    tags = sorted([tagtuple(v[0],v[1]) for k,v in tag_dict.iteritems()], 
+                  key=sort_func,
+                  reverse=(not sort_by_name))
     return render('/tags-list.html', tags=tags, sort_by_name=sort_by_name)
+
 
 @catch_errors
 def tag_posts(tag, page=1):
